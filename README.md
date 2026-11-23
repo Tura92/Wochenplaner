@@ -9,6 +9,8 @@ Gemeinsamer Wochenplan für Daniel und Emily. Mobile Web App (PWA), auf dem Hand
   (auch in die Spalte der anderen Person). Am unteren Rand ziehen = Dauer ändern.
 - **Plan › Woche**: ganze Woche auf einen Blick (D = Daniel, E = Emily).
 - **Vorwoche übernehmen**: kopiert alle Einträge der Vorwoche in die aktuelle Woche.
+- **Termine**: wichtige einmalige Termine (z. B. Arzt, Geburtstag) mit Tag, optional Uhrzeit und für wen.
+  Erscheinen im Plan (Tag: oben als Hinweis, Woche: ★ am Tag) und als Liste aller anstehenden Termine.
 - **Summen**: Stunden pro Person und Kategorie für die gewählte Woche.
 - **Kategorien**: frei anlegen, umbenennen, Farbe wählen, löschen. Personen umbenennen.
 

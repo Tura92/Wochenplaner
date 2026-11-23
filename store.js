@@ -1,7 +1,8 @@
 // Speicher-Schicht. Die App spricht nur mit diesem Interface:
 //   getPeople(), getCategories(), saveCategory(c), deleteCategory(id),
-//   getBlocks(fromDate, toDate), saveBlock(b), saveBlocks(list), deleteBlock(id), onChange(cb)
-// LocalStore speichert im Browser. Ein SupabaseStore mit demselben Interface folgt.
+//   getBlocks(fromDate, toDate), saveBlock(b), saveBlocks(list), deleteBlock(id),
+//   getEvents(), saveEvent(e), deleteEvent(id), onChange(cb)
+// LocalStore speichert im Browser, SupabaseStore in der gemeinsamen Datenbank.
 
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 
@@ -24,6 +25,7 @@ class LocalStore {
     let data = null;
     try { data = JSON.parse(localStorage.getItem(key)); } catch (_) {}
     this.data = data || { people: DEFAULT_PEOPLE, categories: DEFAULT_CATEGORIES, blocks: [] };
+    if (!this.data.events) this.data.events = [];
     this.persist();
     // Änderungen aus einem anderen Tab übernehmen
     window.addEventListener("storage", (e) => {
@@ -73,10 +75,23 @@ class LocalStore {
     this.data.blocks = this.data.blocks.filter((b) => b.id !== id);
     this.persist(); this.emit();
   }
+  async getEvents() { return this.data.events.map((e) => ({ ...e })); }
+  async saveEvent(ev) {
+    if (!ev.id) ev = { ...ev, id: uid() };
+    const i = this.data.events.findIndex((x) => x.id === ev.id);
+    if (i >= 0) this.data.events[i] = { ...ev }; else this.data.events.push({ ...ev });
+    this.persist(); this.emit();
+    return ev;
+  }
+  async deleteEvent(id) {
+    this.data.events = this.data.events.filter((e) => e.id !== id);
+    this.persist(); this.emit();
+  }
 }
 
 // ---------- Supabase (geteilte Daten, Login per E-Mail-Link) ----------
 const BLOCK_COLS = ["id", "person_id", "category_id", "date", "start_min", "end_min", "note"];
+const EVENT_COLS = ["id", "title", "date", "start_min", "end_min", "person_id", "note"];
 const pick = (o, keys) => Object.fromEntries(keys.filter((k) => o[k] !== undefined).map((k) => [k, o[k]]));
 
 class SupabaseStore {
@@ -106,6 +121,7 @@ class SupabaseStore {
         .on("postgres_changes", { event: "*", schema: "public", table: "blocks" }, () => this.emit())
         .on("postgres_changes", { event: "*", schema: "public", table: "categories" }, () => this.emit())
         .on("postgres_changes", { event: "*", schema: "public", table: "people" }, () => this.emit())
+        .on("postgres_changes", { event: "*", schema: "public", table: "events" }, () => this.emit())
         .subscribe();
       // Beim Zurückkehren in die App neu laden (Handy war im Hintergrund)
       document.addEventListener("visibilitychange", () => { if (!document.hidden) this.emit(); });
@@ -145,6 +161,14 @@ class SupabaseStore {
     this.check(await this.sb.from("blocks").insert(rows));
   }
   async deleteBlock(id) { this.check(await this.sb.from("blocks").delete().eq("id", id)); }
+  // Einmalige Termine (wenige Einträge, daher immer alle laden)
+  async getEvents() { return this.check(await this.sb.from("events").select("*").order("date").order("start_min", { nullsFirst: true })); }
+  async saveEvent(ev) {
+    const row = { ...pick(ev, EVENT_COLS), updated_at: new Date().toISOString() };
+    if (!row.id) { delete row.id; return this.check(await this.sb.from("events").insert(row).select().single()); }
+    return this.check(await this.sb.from("events").update(row).eq("id", row.id).select().single());
+  }
+  async deleteEvent(id) { this.check(await this.sb.from("events").delete().eq("id", id)); }
 }
 
 window.createStore = function () {
