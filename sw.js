@@ -1,4 +1,4 @@
-const CACHE = "wochenplaner-v2";
+const CACHE = "wochenplaner-v3";
 const FILES = ["./", "index.html", "styles.css", "app.js", "store.js", "config.js", "manifest.webmanifest", "icon.svg", "vendor/supabase.js"];
 self.addEventListener("install", (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES))));
 self.addEventListener("activate", (e) => e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k))))));

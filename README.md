@@ -7,7 +7,6 @@ Gemeinsamer Wochenplan für Daniel und Emily. Mobile Web App (PWA), auf dem Hand
 - **Plan › Tag**: Zeitstrahl mit einer Spalte pro Person. Leere Stelle antippen = neuer Block.
   Block antippen = bearbeiten. Block lange gedrückt halten und ziehen = verschieben
   (auch in die Spalte der anderen Person). Am unteren Rand ziehen = Dauer ändern.
-  Nach links/rechts wischen = anderer Tag.
 - **Plan › Woche**: ganze Woche auf einen Blick (D = Daniel, E = Emily).
 - **Vorwoche übernehmen**: kopiert alle Einträge der Vorwoche in die aktuelle Woche.
 - **Summen**: Stunden pro Person und Kategorie für die gewählte Woche.
