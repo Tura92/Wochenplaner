@@ -30,6 +30,7 @@
         <button class="text-btn" id="copyWeekBtn">Vorwoche übernehmen</button>
       </div>
       <div class="day-chips" id="dayChips"></div>
+      <div class="day-events" id="dayEvents" hidden></div>
       <div class="people-head" id="peopleHead"></div>
       <div class="timeline-wrap" id="timelineWrap">
         <div class="timeline" id="timeline"></div>
@@ -38,6 +39,12 @@
         <div class="week-grid" id="weekGrid"></div>
       </div>
       <button class="fab" id="addBtn" aria-label="Zeitblock hinzufügen">+</button>
+    </section>
+
+    <!-- Ansicht: Termine -->
+    <section id="view-events" class="view" hidden>
+      <div id="eventsContent"></div>
+      <button class="fab" id="addEventBtn" aria-label="Termin hinzufügen">+</button>
     </section>
 
     <!-- Ansicht: Summen -->
@@ -58,6 +65,7 @@
 
   <nav class="tabbar">
     <button data-view="plan" class="active"><span class="tab-ic">▦</span>Plan</button>
+    <button data-view="events"><span class="tab-ic">★</span>Termine</button>
     <button data-view="sum"><span class="tab-ic">Σ</span>Summen</button>
     <button data-view="cat"><span class="tab-ic">●</span>Kategorien</button>
   </nav>
@@ -84,6 +92,33 @@
         <span class="spacer"></span>
         <button type="button" class="text-btn" id="cancelBlockBtn">Abbrechen</button>
         <button type="submit" class="primary-btn" id="saveBlockBtn">Speichern</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Dialog: Termin -->
+  <dialog id="eventDialog">
+    <form method="dialog" id="eventForm">
+      <h3 id="eventTitle">Termin</h3>
+      <label class="field">Was<input type="text" id="eTitle" maxlength="80" required placeholder="z. B. U-Untersuchung Emilia"></label>
+      <label class="field-label">Für wen</label>
+      <div class="segmented full" id="eventPersonPick"></div>
+      <div class="row">
+        <label class="field">Tag<input type="date" id="eDate" required></label>
+      </div>
+      <label class="check"><input type="checkbox" id="eAllDay"> Ganztägig</label>
+      <div class="row two" id="eTimes">
+        <label class="field">Von<input type="time" id="eStart" step="300"></label>
+        <label class="field">Bis (optional)<input type="time" id="eEnd" step="300"></label>
+      </div>
+      <label class="field">Notiz (optional)<input type="text" id="eNote" maxlength="200" placeholder="z. B. Impfpass mitnehmen"></label>
+      <p class="error" id="eventError"></p>
+      <div class="dialog-actions">
+        <button type="button" class="danger-btn" id="deleteEventBtn">Löschen</button>
+        <button type="button" class="text-btn" id="showEventBtn">Im Plan</button>
+        <span class="spacer"></span>
+        <button type="button" class="text-btn" id="cancelEventBtn">Abbrechen</button>
+        <button type="submit" class="primary-btn">Speichern</button>
       </div>
     </form>
   </dialog>
