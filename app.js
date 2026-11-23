@@ -315,11 +315,6 @@
       b.append(i, el("span", null, c.name), el("em", null, counts[c.id] ? hours(counts[c.id]) + " diese Woche" : "›"));
       b.onclick = () => openCat(c); li.append(b); ul.append(li);
     });
-    const pl = $("#personList"); pl.innerHTML = "";
-    state.people.forEach((p) => {
-      const li = el("li"); const b = el("button"); b.append(el("span", null, p.name), el("em", null, "Umbenennen ›"));
-      b.onclick = () => openPerson(p); li.append(b); pl.append(li);
-    });
     $("#storeHint").textContent = store.mode === "lokal"
       ? "Hinweis: Die Daten werden gerade nur auf diesem Gerät gespeichert."
       : `Angemeldet als ${store.userEmail || ""}. Änderungen sind sofort bei euch beiden sichtbar.`;
@@ -504,14 +499,6 @@
     $("#deleteCatBtn").hidden = !c.id;
     $("#swatches").hidden = false; $("#swatches").previousElementSibling.hidden = false;
     renderSwatches();
-    $("#catError").textContent = "";
-    cd.showModal();
-  }
-  function openPerson(p) {
-    catMode = "person"; editingCat = { ...p };
-    $("#catTitle").textContent = "Person umbenennen";
-    $("#cName").value = p.name; $("#deleteCatBtn").hidden = true;
-    $("#swatches").hidden = true; $("#swatches").previousElementSibling.hidden = true;
     $("#catError").textContent = "";
     cd.showModal();
   }
