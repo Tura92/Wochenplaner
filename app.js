@@ -460,21 +460,6 @@
     await save(() => store.saveBlocks(copies), `${copies.length} Einträge übernommen`);
   };
 
-  // Wischen nach links/rechts in der Tagesansicht wechselt den Tag
-  (() => {
-    let sx = null, sy = null;
-    const wrap = $("#timelineWrap");
-    wrap.addEventListener("touchstart", (e) => { if (drag) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-    wrap.addEventListener("touchend", (e) => {
-      if (sx == null || (drag && drag.active)) { sx = null; return; }
-      const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null;
-      if (Math.abs(dx) < 70 || Math.abs(dy) > 50) return;
-      if (dx < 0) { if (state.dayIdx < 6) state.dayIdx++; else { state.weekStart = addDays(state.weekStart, 7); state.dayIdx = 0; return load(); } }
-      else { if (state.dayIdx > 0) state.dayIdx--; else { state.weekStart = addDays(state.weekStart, -7); state.dayIdx = 6; return load(); } }
-      render();
-    }, { passive: true });
-  })();
-
   store.onChange(() => { if (!drag) load(); });
   // ---------- Start / Anmeldung ----------
   function showLogin(text) {
